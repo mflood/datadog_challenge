@@ -1,4 +1,9 @@
+"""
+    wiki_blacklist.py
 
+    implements WikiBlacklist
+    maintains globals BLACKLIST_URL and LOCAL_BLACKLIST_FILEPATH
+"""
 
 import logging
 import os
@@ -6,8 +11,8 @@ import sys
 import requests
 from datadog.loggingsetup import LOGNAME
 
-BLACKLIST_URL="https://s3.amazonaws.com/dd-interview-data/data_engineer/wikipedia/blacklist_domains_and_pages"
-LOCAL_BLACKLIST_FILEPATH="/tmp/datadog_wiki_blacklist"
+BLACKLIST_URL = "https://s3.amazonaws.com/dd-interview-data/data_engineer/wikipedia/blacklist_domains_and_pages"
+LOCAL_BLACKLIST_FILEPATH = "/tmp/datadog_wiki_blacklist"
 
 
 class WikiBlacklist():
@@ -25,7 +30,7 @@ class WikiBlacklist():
             Return the number of items in the list
         """
         return len(self._blacklist)
-        
+
     def head(self):
         """
             Show 20 entriew from the blacklist
@@ -36,19 +41,19 @@ class WikiBlacklist():
 
     def _download_blacklist_file(self, url, local_filepath):
         """
-           Download a remote file to local_filepath 
+           Download a remote file to local_filepath
            Do it in chunks so we don't have the entire file in memory
         """
         self._logger.info("Downloading %s to %s", url, local_filepath)
-        with requests.get(url, stream=True) as r:
-            r.raise_for_status()
-            with open(local_filepath, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=8192):
+        with requests.get(url, stream=True) as request:
+            request.raise_for_status()
+            with open(local_filepath, 'wb') as handle:
+                for chunk in request.iter_content(chunk_size=8192):
                     if chunk: # filter out keep-alive new chunks
                         sys.stderr.write(".")
                         sys.stderr.flush()
                         #self._logger.debug(len(chunk))
-                        f.write(chunk)
+                        handle.write(chunk)
 
 
     def load_list(self, force_download=False):
@@ -74,7 +79,7 @@ class WikiBlacklist():
                 line = line.strip()#.lower()
                 return_dict[line] = 1
 
-        return return_dict 
+        return return_dict
 
     def is_blacklisted(self, page):
         """
@@ -84,3 +89,4 @@ class WikiBlacklist():
             return True
         return False
 
+# end

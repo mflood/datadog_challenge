@@ -1,7 +1,12 @@
+"""
+    test_wiki_blacklist.py
+
+    unit tests for WikiBlacklist
+"""
 
 import logging
 import pytest
-import requests_mock
+import requests_mock # pylint: disable=import-error
 from datadog import loggingsetup
 from datadog.wiki_blacklist import WikiBlacklist
 from datadog.wiki_blacklist import BLACKLIST_URL
@@ -31,7 +36,11 @@ af .sy
 af 2009
 af Apostelskap"""
 
-def test_get_wiki_blacklist(req_mock):
+def test_get_wiki_blacklist(req_mock): # pylint: disable=redefined-outer-name
+    """
+        Test basic usage
+        use mock to download fake contents
+    """
 
     # this sets up the mock_urtl with a mock response
     req_mock.get(BLACKLIST_URL, text=BLACK_LIST)
@@ -40,7 +49,8 @@ def test_get_wiki_blacklist(req_mock):
     wblk._local_filepath = "/tmp/teapot"
     wblk.load_list(force_download=True)
     wblk.head()
-    assert wblk.is_blacklisted(page="af Apostelskap") == True
-    assert wblk.is_blacklisted(page="af apostelskap") == False
+    assert wblk.is_blacklisted(page="af Apostelskap")
+    assert not wblk.is_blacklisted(page="af apostelskap")
     assert wblk.get_size() == 10
 
+# end
