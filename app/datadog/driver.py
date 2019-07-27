@@ -10,19 +10,28 @@ import logging
 import datetime
 from datadog import loggingsetup
 
+def make_date_from_string(date_string):
+    """
+        Given YYYY-MM-DD
+        create a date object
+    """
+    year, month, day = date_string.split("-")
+    date_object = datetime.date(int(year), int(month), int(day))
+    return date_object
 
-def year_argument(some_arg):
-    # data is only available from 2015 to current year
+def date_argument(some_arg):
+    # data is only available from 2015-05-01 to current year
+    d = make_date_from_string(some_arg)
 
-    as_int = int(some_arg)
-    if as_int < 2015 or as_int > datetime.datetime.now().year:
+    if d < datetime.date(2015, 5, 1) or d > datetime.date.today():
         raise TypeError("")
-    return as_int
+
+    return d
 
 def hour_argument(some_arg):
 
     as_int = int(some_arg)
-    if as_int < 0 or as_int > 24:
+    if as_int < 0 or as_int > 23:
         raise TypeError("")
     return as_int
 
@@ -38,18 +47,16 @@ def parse_args(argv=None):
                         required=False,
                         help="Debug output")
 
-    parser.add_argument("--year",
-                        dest="year",
-                        metavar='YYYY',
-                        default=datetime.datetime.now().year,
+    parser.add_argument("--date",
+                        dest="date",
+                        metavar='YYYY-MM-DD',
                         required=False,
-                        type=year_argument,
-                        help="Year of data to analyze 2015 - present (default current year)")
+                        type=date_argument,
+                        help="Year of data to analyze 2015 - present (default current date)")
 
     parser.add_argument("--hour",
                         dest="hour",
                         metavar='H',
-                        default=datetime.datetime.now().hour,
                         type=hour_argument,
                         required=False,
                         help="Hour of data to analyze (default current hour)")
@@ -57,6 +64,16 @@ def parse_args(argv=None):
     results = parser.parse_args(argv)
     return results
 
+
+def make_url(date_object, hour):
+    """
+        return the appropriate wikimedia
+        url for the given hour and year
+
+        https://dumps.wikimedia.org/other/pageviews/2015/2015-05/pageviews-20150501-010000.gz
+    """
+
+    
 
 def main():
     """
@@ -70,6 +87,19 @@ def main():
     else:
         loggingsetup.init(logging.INFO)
 
+    logger = logging.getLogger(loggingsetup.LOGNAME)
+
+    date_object =  arg_object.date
+    if not date_object:
+        date_object = datetime.date.today()
+
+    hour = arg_object.hour
+    if hour is None:
+        hour = datetime.datetime.now().hour
+
+
+    logger.info("date: {} hour: {}".format(date_object, hour))
+    
 
 
 if __name__ == "__main__":
