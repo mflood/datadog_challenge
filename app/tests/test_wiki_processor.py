@@ -8,13 +8,17 @@ import logging
 import pytest
 import requests_mock # pylint: disable=import-error
 from datadog import loggingsetup
-from datadog.wiki_blacklist import WikiBlacklist
 from datadog.wiki_processor import WikiProcessor
 loggingsetup.init(logging.DEBUG)
 
 SAMPLE_FILE = "tests/sample_pageviews.txt.Z"
 
 def page_content(arg1, arg2):
+    """
+        Returns the binary content of
+        tests/sample_pageviews.txt.Z
+        to be returned by the mock request
+    """
     with open(SAMPLE_FILE, "rb") as handle:
         content = handle.read()
     return content
@@ -22,12 +26,25 @@ def page_content(arg1, arg2):
 
 @pytest.fixture()
 def blacklist_mock():
-    
+    """
+        Returns a mock WikiBlacklist
+        that has a single item
+        from tests/sample_pageviews.txt.Z blacklisted
+    """
+
     class BlacklistMock():
+        """
+            Mock version of WikiBlacklist
+        """
 
         def is_blacklisted(self, page):
+            """
+                Just blacklist one simple item
+            """
             if page == "commons.m Category:1962_Flood_in_Skopje":
                 return True
+
+            return False
 
     return BlacklistMock()
 
@@ -89,7 +106,7 @@ def test_process_pageviews(req_mock, blacklist_mock): # pylint: disable=redefine
                                           hour=hour,
                                           force_download=True)
 
-    
+
     domains = list(results.keys())
     domains.sort()
     assert domains == ['as.m',
@@ -126,5 +143,3 @@ def test_process_pageviews(req_mock, blacklist_mock): # pylint: disable=redefine
 
 
 # end
-
-

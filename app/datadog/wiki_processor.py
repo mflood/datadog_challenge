@@ -32,7 +32,10 @@ class WikiProcessor():
         """
             return deterministic url filepath
 
-            e.g https://dumps.wikimedia.org/other/pageviews/2015/2015-05/pageviews-20150501-010000.gz
+            e.g.:
+
+        https://dumps.wikimedia.org/other/pageviews/2015/2015-05/pageviews-20150501-010000.gz
+
         """
         path = "{base_url}/{y:04d}/{y:04d}-{m:02d}/pageviews-{y:04d}{m:02d}{d:02d}-{h:02d}0000.gz".format(
             base_url=BASE_URL.rstrip('/'),
@@ -85,9 +88,11 @@ class WikiProcessor():
         stats = self._process_file(local_filepath=local_path)
         return stats
 
-
     def _process_filehandle(self, filehandle):
-
+        """
+            given an open filehandle,
+            process the file contents
+        """
 
         stats = {}
         for index, raw_line in enumerate(filehandle):
@@ -95,16 +100,23 @@ class WikiProcessor():
             #print("line is %s" % line)
             #print("type is %s" % type(line))
             parts = line.split(' ')
-            
 
             stats.setdefault(parts[0], [])
-             
+
             if IGNORE_DASH and parts[1] == '-':
                 continue
 
             if not self._blacklist.is_blacklisted(page="{} {}".format(parts[0], parts[1])):
-                heapq.heappush(stats[parts[0]], 
-                                     (int(parts[2]), parts[1]))
+                # heapq can take a tuple like (2, 'something')
+                # and will prioritize based on the first element
+                # so we store (PAGEVIEWS, PAGE)
+                # in the heap
+                heapq.heappush(stats[parts[0]],
+                               (int(parts[2]), parts[1]))
+
+                # we want the heap to stay 25 elements
+                # so we remove the lowest value
+                # when it reaches 26
                 if len(stats[parts[0]]) > TOP_N:
                     # remove the lowest value
                     heapq.heappop(stats[parts[0]])
@@ -116,15 +128,11 @@ class WikiProcessor():
             processes the localfile to gain stats
             parses file, returns dictionary
             of the stats
+
+            expects the file is a gzipped file
         """
         self._logger.info("Loading page data from %s", local_filepath)
 
-        # first try to process as plaintext file
-        ##try:
-        #   with open(local_filepath, "r") as handle:
-        #        return self._process_filehandle(handle)
-
-        #except UnicodeDecodeError: 
         with gzip.open(local_filepath, 'rb') as handle:
             return self._process_filehandle(handle)
 
