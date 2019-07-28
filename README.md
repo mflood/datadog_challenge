@@ -1,5 +1,21 @@
 # Datadog Take Home Project
 
+> This app downloads pageview files from 
+
+    https://dumps.wikimedia.org/other/pageviews/
+
+> It then assembles the top 25 pages for each subdomain
+and saves the report to a file
+
+## Architeture
+
+    args.py     ................. handles commane line arguments   
+    loggingsetup.py     ......... configures application logging
+    wiki_blacklist.py     ....... downloads/caches and exposes blacklist
+    wiki_processor.py     ....... downloads/caches pageview reports finds top 25 pages for each domain 
+    pageview_report_saver.py .... writes our report data to a file in the correct order
+    driver.py   ................. Creates/configures and runs the app
+
 
 # Running the app
 
@@ -12,7 +28,6 @@ cd app
 ./run.sh
 ./run_range.sh
 ```
-
 
 # How to Test
 
