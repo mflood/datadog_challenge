@@ -9,9 +9,21 @@ import pytest
 import requests_mock # pylint: disable=import-error
 from datadog import loggingsetup
 from datadog.wiki_processor import WikiProcessor
+from datadog.wiki_processor import WikiProcessorException
 loggingsetup.init(logging.DEBUG)
 
 SAMPLE_FILE = "tests/sample_pageviews.txt.Z"
+CORRUPT_SAMPLE_FILE = "tests/sample_pageviews_corrupt.txt.Z"
+
+def corrupt_page_content(arg1, arg2):
+    """
+        Returns the binary content of
+        tests/sample_pageviews.txt.Z
+        to be returned by the mock request
+    """
+    with open(CORRUPT_SAMPLE_FILE, "rb") as handle:
+        content = handle.read()
+    return content
 
 def page_content(arg1, arg2):
     """
@@ -77,7 +89,7 @@ def test_get_local_cache_path():
     """
     processor = WikiProcessor(blacklist=None)
     path = processor.get_local_cache_path(year=2017, month=12, day=3, hour=0)
-    expected = "/tmp/2017.12.03.00.cache"
+    expected = "/tmp/ddog_cache/2017.12.03.00.cache"
     assert path == expected
 
 def test_process_pageviews(req_mock, blacklist_mock): # pylint: disable=redefined-outer-name
@@ -140,6 +152,34 @@ def test_process_pageviews(req_mock, blacklist_mock): # pylint: disable=redefine
                        'sv.m',
                        'uk']
 
+
+
+def test_process_corrupt_pageviews(req_mock, blacklist_mock): # pylint: disable=redefined-outer-name
+    """
+        Test basic usage
+        use mock to download fake contents
+    """
+
+    year = 2010
+    month = 12
+    day = 3
+    hour = 0
+
+    processor = WikiProcessor(blacklist=blacklist_mock)
+    url = processor.get_url(year=year,
+                            month=month,
+                            day=day,
+                            hour=hour)
+
+    # this sets up the mock_url with a mock response
+    req_mock.get(url, content=corrupt_page_content)
+
+    with pytest.raises(WikiProcessorException):
+        results = processor.process_pageviews(year=year,
+                                              month=month,
+                                              day=day,
+                                              hour=hour,
+                                              force_download=True)
 
 
 # end
