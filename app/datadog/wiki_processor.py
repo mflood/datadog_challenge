@@ -156,7 +156,7 @@ class WikiProcessor():
 
             expects the file is a gzipped file
         """
-        self._logger.info("Loading page data from %s", local_filepath)
+        self._logger.info("Processing page data from %s", local_filepath)
 
         with gzip.open(local_filepath, 'rb') as handle:
             try:
