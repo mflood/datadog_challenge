@@ -20,16 +20,15 @@ def date_argument(some_arg):
     """
         Takes the date argument from the command line
         and converts it into a date object
-        
         ensures the date is valid
     """
     # data is only available from 2015-05-01 to current date
-    d = make_date_from_string(some_arg)
+    date_object = make_date_from_string(some_arg)
 
-    if d < datetime.date(2015, 5, 1):
+    if date_object < datetime.date(2015, 5, 1):
         raise TypeError("")
 
-    return d
+    return date_object
 
 def hour_argument(some_arg):
     """
@@ -72,3 +71,4 @@ def parse_args(argv=None):
     results = parser.parse_args(argv)
     return results
 
+# end
