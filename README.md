@@ -190,3 +190,5 @@ normally just process a single hour
     - Make the app long-running and scalable, where it pulls year/month/day/hour off of a queue
     - See testing section for ideas about validation
     - add --refresh-blacklist flag to re-download the blacklist
+    - parameterize report directory
+    - configure cache directories for pageview data and blacklist
