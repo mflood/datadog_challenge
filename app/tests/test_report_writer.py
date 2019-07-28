@@ -6,9 +6,6 @@ from datadog.pageview_report_saver import PageviewReportSaver
 loggingsetup.init(logging.DEBUG)
 
 
-def test_reportsaver():
-    file_saver = PageviewReportSaver()
-
 def test_filepath():
 
     year = 2017
@@ -26,10 +23,10 @@ def test_filepath():
 def test_save():
 
     data = {
-    'm': [(1, 'hey')]
+        'm': [(1, 'hey')]
     }
 
     file_saver = PageviewReportSaver()
     file_saver.save_report_to_path(data=data, filepath="/tmp/testout")
 
-
+# end

@@ -1,9 +1,16 @@
+"""
+    pageview_report_saver.py
+
+    defines PageviewReportSaver
+    maintains global REPORT_DIR
+
+"""
 import csv
 import heapq
 import logging
 from datadog.loggingsetup import LOGNAME
 
-REPORT_DIR="/tmp"
+REPORT_DIR = "/tmp"
 
 class PageviewReportSaver():
     """
@@ -33,7 +40,7 @@ class PageviewReportSaver():
             Saves report to CSV
             ordered by domain, then pages ranked by num views
         """
-        self._logger.info("Writing report to %s", filepath) 
+        self._logger.info("Writing report to %s", filepath)
         with open(filepath, "w", newline='') as handle:
             fieldnames = ["domain", "page", "num_views"]
             csvwriter = csv.writer(handle,
@@ -42,21 +49,21 @@ class PageviewReportSaver():
                                    quoting=csv.QUOTE_MINIMAL)
 
             csvwriter.writerow(fieldnames)
-            
+
             # write report in order of domains
             domains = list(data.keys())
             domains.sort()
 
             for domain in domains:
                 views = data[domain]
-                
+
                 # views is a qheap of tuples
                 # like
                 # [ (20, 'page_A'), (10, 'page_B')
                 # we can use qheap to pop them off
                 # in numerical order
                 sorted_list = []
-                while len(views):
+                while views:
                     sorted_list.append(heapq.heappop(views))
 
                 # we want the most views page at the top
@@ -65,3 +72,4 @@ class PageviewReportSaver():
                     # item looks like (20, 'some page')
                     csvwriter.writerow([domain, item[1], item[0]])
 
+# end
