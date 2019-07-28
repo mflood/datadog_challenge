@@ -41,6 +41,10 @@ def test_driver():
     class MockSaver():
 
         def get_filepath(self, year, month, day, hour):
+            if hour == 4:
+                # return a file that exists
+                return "/tmp"
+
             return "/tmp/thisfiledoesnotexist"
 
         def save_report_to_path(self, data, filepath):
@@ -63,7 +67,7 @@ def test_driver():
                                    wiki_processor=MockProcessor())
 
 
-    hour_range = [3] 
+    hour_range = [3, 4] 
     date_range = [datetime.date(2019, 6, 2)]
 
     driver.run_range(date_list=date_range,
