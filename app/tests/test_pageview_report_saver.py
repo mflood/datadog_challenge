@@ -17,7 +17,7 @@ def test_filepath():
                                      month=month,
                                      day=day,
                                      hour=hour)
-    assert path == "/tmp/ddog_reports/2017.03.01.00.report"
+    assert path == "/tmp/ddog_reports/2017.03.01.00.report.csv"
 
 def test_save():
 

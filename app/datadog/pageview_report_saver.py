@@ -27,7 +27,7 @@ class PageviewReportSaver():
             Determins the filepath based on
             year, monthm, day and hour
         """
-        return "{}/{:04d}.{:02d}.{:02d}.{:02d}.report".format(
+        return "{}/{:04d}.{:02d}.{:02d}.{:02d}.report.csv".format(
             REPORT_DIR.rstrip('/'),
             year,
             month,
