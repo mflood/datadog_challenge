@@ -31,8 +31,22 @@ for example:
     
 ## Regression/Unit tests
 
-    1. Unit tests
-    2. Use a small sample file and run regression tests against that file.
+    1. Use a small sample file and run regression tests against that file.
+    2. Unit tests:
+
+```
+Name                               Stmts   Miss  Cover   Missing
+----------------------------------------------------------------
+datadog/__init__.py                    0      0   100%
+datadog/args.py                       46      0   100%
+datadog/driver.py                     70     19    73%   56-57, 117-156, 159
+datadog/loggingsetup.py               12      0   100%
+datadog/pageview_report_saver.py      26      0   100%
+datadog/wiki_blacklist.py             45      0   100%
+datadog/wiki_processor.py             73      0   100%
+----------------------------------------------------------------
+TOTAL                                272     19    93%
+```
 
 ## Report Validation
     - Code up a module for report file validation, things like:
