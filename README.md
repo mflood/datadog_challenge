@@ -56,7 +56,7 @@ cd app
 ./run_range.sh
 ```
 
-## using python
+## Using python
 ```
 cd app
 # set up the environment
