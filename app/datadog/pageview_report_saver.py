@@ -10,7 +10,7 @@ import heapq
 import logging
 from datadog.loggingsetup import LOGNAME
 
-REPORT_DIR = "/tmp"
+REPORT_DIR = "/tmp/ddog_reports"
 
 class PageviewReportSaver():
     """
