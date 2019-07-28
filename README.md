@@ -1,5 +1,7 @@
 # Datadog Take Home Project
 
+> Matthew Flood
+
 > This app downloads pageview files from 
 
     https://dumps.wikimedia.org/other/pageviews/
@@ -21,13 +23,52 @@ and saves the report to a file
 
 > requires python3, virtualenv, pip
 
+
+## Using kickoff scripts
+
 ```
 cd app
+# set up the environment
+#
 ./setup.sh
+
+# run unit tests
+#
+./run_test
 ./run_test coverage
+
+# run for current day/hour
+#
 ./run.sh
+# rerun for current day/hour
+./run.sh
+
+# run for specific date (--date=2019-04-01 --hour=12)
+#
+./run_specific_date.sh
+# rerun for specific date
+./run_specific_date.sh
+
+# run a range of dates and hours
+#
 ./run_range.sh
 ```
+
+## using python
+```
+cd app
+# set up the environment
+#
+./setup.sh
+
+# activate the virtual env
+source venv/bin/activate
+
+# run the app
+python datadog/driver.py --help
+
+```
+
 
 # How to Test
 
