@@ -10,7 +10,7 @@ LOGNAME = "datadog"
 
 def init(loglevel=logging.DEBUG):
     """
-        Creates standard logging for the logger_name passed in
+        Creates standard logging
     """
     logger = logging.getLogger(LOGNAME)
     logger.setLevel(logging.DEBUG)
