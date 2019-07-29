@@ -192,3 +192,4 @@ normally just process a single hour
     - add --refresh-blacklist flag to re-download the blacklist
     - parameterize report directory
     - configure cache directories for pageview data and blacklist
+    - Have a deterministic way to handle view count ties (e.g. all pages have been seen 2 times)
