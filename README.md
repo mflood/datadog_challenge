@@ -13,7 +13,7 @@ and saves the report to a file
 
 ## Architeture
 
-    args.py     ................. handles commane line arguments   
+    args.py     ................. handles command line arguments   
     loggingsetup.py     ......... configures application logging
     wiki_blacklist.py     ....... downloads/caches and exposes blacklist
     wiki_processor.py     ....... downloads/caches pageview reports finds top 25 pages for each domain 
