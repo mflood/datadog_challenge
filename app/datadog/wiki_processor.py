@@ -124,7 +124,7 @@ class WikiProcessor():
             # initialize the domain data to empty list
             stats.setdefault(domain, [])
 
-            # possible ignore dash - which represents
+            # possibly ignore dash "-" which represents
             # pages that could not be identified
             # think of it as NaN
             if IGNORE_DASH and page == '-':
